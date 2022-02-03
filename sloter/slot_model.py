@@ -20,8 +20,6 @@ def load_backbone(args):
         args.model,
         pretrained=args.pre_trained,
         num_classes=args.num_classes)
-    if args.dataset == "MNIST":
-        bone.conv1 = nn.Conv2d(1, 64, 3, stride=2, padding=1, bias=False)
     if args.use_slot:
         if args.use_pre:
             checkpoint = torch.load(f"saved_model/{args.dataset}_no_slot_checkpoint.pth")
@@ -106,20 +104,22 @@ class SlotModel(nn.Module):
         x = self.backbone(x)
         if self.use_slot:
             x = self.conv1x1(x.view(x.size(0), self.channel, self.feature_size, self.feature_size))
+
             x = torch.relu(x)
+
             pe = self.position_emb(x)
             x_pe = x + pe
-
             b, n, r, c = x.shape
             x = x.reshape((b, n, -1)).permute((0, 2, 1))
             x_pe = x_pe.reshape((b, n, -1)).permute((0, 2, 1))
-            x, attn_loss = self.slot(x_pe, x)
+            x, attn_loss,expl = self.slot(x_pe, x)
+
         output = F.log_softmax(x, dim=1)
 
         if target is not None:
             if self.use_slot:
                 loss = F.nll_loss(output, target) + self.lambda_value * attn_loss
-                return [output, [loss, F.nll_loss(output, target), attn_loss]]
+                return [output, [loss, F.nll_loss(output, target), attn_loss],expl]
             else:
                 loss = F.nll_loss(output, target)
                 return [output, [loss]]

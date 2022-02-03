@@ -65,16 +65,14 @@ class SlotAttention(nn.Module):
 
             slots = slots.reshape(b, -1, d)
 
-            if self.vis:
-                slots_vis = attn.clone()
-
+            
+            slots_vis = attn.clone()
         if self.vis:
             if self.slots_per_class > 1:
                 new_slots_vis = torch.zeros((slots_vis.size(0), self.num_classes, slots_vis.size(-1)))
-                for slot_class in range(self.num_classes):
-                    new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
-                slots_vis = new_slots_vis.to(updates.device)
-
+            for slot_class in range(self.num_classes):
+                new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
+            slots_vis = new_slots_vis.to(updates.device)
             slots_vis = slots_vis[self.vis_id]
             slots_vis = ((slots_vis - slots_vis.min()) / (slots_vis.max()-slots_vis.min()) * 255.).reshape(slots_vis.shape[:1]+(int(slots_vis.size(1)**0.5), int(slots_vis.size(1)**0.5)))
             slots_vis = (slots_vis.cpu().detach().numpy()).astype(np.uint8)
@@ -83,14 +81,19 @@ class SlotAttention(nn.Module):
                 image.save(f'sloter/vis/slot_{id:d}.png')
             print(self.loss_status*torch.sum(attn.clone(), dim=2, keepdim=False))
             print(self.loss_status*torch.sum(updates.clone(), dim=2, keepdim=False))
-
         if self.slots_per_class > 1:
             new_updates = torch.zeros((updates.size(0), self.num_classes, updates.size(-1)))
             for slot_class in range(self.num_classes):
                 new_updates[:, slot_class] = torch.sum(updates[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)], dim=1, keepdim=False)
             updates = new_updates.to(updates.device)
 
+            #to get the attention right
+            new_slots_vis = torch.zeros((slots_vis.size(0), self.num_classes, slots_vis.size(-1)))
+            for slot_class in range(self.num_classes):
+                new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
+                slots_vis=new_slots_vis
+        
         attn_relu = torch.relu(attn)
         slot_loss = torch.sum(attn_relu) / attn.size(0) / attn.size(1) / attn.size(2)# * self.slots_per_class
+        return self.loss_status*torch.sum(updates, dim=2, keepdim=False), torch.pow(slot_loss, self.power), slots_vis
 
-        return self.loss_status*torch.sum(updates, dim=2, keepdim=False), torch.pow(slot_loss, self.power)
