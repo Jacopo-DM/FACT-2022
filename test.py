@@ -44,9 +44,9 @@ def test(args, model, device, img, image, label, vis_id):
         print(f"attention_ratio: {attention_ratio}")
 
 
-def main():
+def main(args):
     parser = argparse.ArgumentParser('model training and evaluation script', parents=[get_args_parser()])
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     args_dict = vars(args)
     args_for_evaluation = ['num_classes', 'lambda_value', 'power', 'slots_per_class']
@@ -122,5 +122,5 @@ def main():
     test(args, model, device, image_orl, image, label, vis_id=args.vis_id)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
