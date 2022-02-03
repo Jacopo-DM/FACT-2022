@@ -70,8 +70,8 @@ class SlotAttention(nn.Module):
         if self.vis:
             if self.slots_per_class > 1:
                 new_slots_vis = torch.zeros((slots_vis.size(0), self.num_classes, slots_vis.size(-1)))
-            for slot_class in range(self.num_classes):
-                new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
+                for slot_class in range(self.num_classes):
+                    new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
             slots_vis = new_slots_vis.to(updates.device)
             slots_vis = slots_vis[self.vis_id]
             slots_vis = ((slots_vis - slots_vis.min()) / (slots_vis.max()-slots_vis.min()) * 255.).reshape(slots_vis.shape[:1]+(int(slots_vis.size(1)**0.5), int(slots_vis.size(1)**0.5)))

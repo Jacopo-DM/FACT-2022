@@ -22,7 +22,6 @@ def test(args, model, device, img, image, label, vis_id):
     output = model(torch.unsqueeze(image, dim=0))
     pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
     # print(output[0])
-    print(pred[0])
 
     #For vis
     image_raw = img
@@ -43,8 +42,10 @@ def test(args, model, device, img, image, label, vis_id):
         attention_ratio = float(slot_image.sum()) / float(slot_image_size[0]*slot_image_size[1]*255)
         print(f"attention_ratio: {attention_ratio}")
 
+    return pred[0]
 
-def main(args):
+
+def main(args, datapoint):
     parser = argparse.ArgumentParser('model training and evaluation script', parents=[get_args_parser()])
     args = parser.parse_args(args)
 
@@ -83,10 +84,11 @@ def main(args):
         dataset_val = ConText(val, transform=transform)
         data_loader_val = torch.utils.data.DataLoader(dataset_val, args.batch_size, shuffle=False, num_workers=1, pin_memory=True)
         iter_loader = iter(data_loader_val)
-        for i in range(0, 2):
+        x, y = datapoint
+        for i in range(0, x):
             data = iter_loader.next()
-        image = data["image"][54]
-        label = data["label"][54].item()
+        image = data["image"][y]
+        label = data["label"][y].item()
         image_orl = Image.fromarray((image.cpu().detach().numpy()*255).astype(np.uint8).transpose((1,2,0)), mode='RGB')
         image = transform(image_orl)
         transform = transforms.Compose([transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
@@ -103,15 +105,17 @@ def main(args):
     elif args.dataset == 'CUB200':
         dataset_val = CUB_200(args, train=False, transform=transform)
         data_loader_val = torch.utils.data.DataLoader(dataset_val, args.batch_size, shuffle=False, num_workers=1, pin_memory=True)
-        data = iter(data_loader_val).next()
-        image = data["image"][0]
-        label = data["label"][0].item()
+        iter_loader = iter(data_loader_val)
+        x, y = datapoint
+        for i in range(0, x):
+            data = iter_loader.next()
+        image = data["image"][y]
+        label = data["label"][y].item()
         image_orl = Image.fromarray((image.cpu().detach().numpy()*255).astype(np.uint8).transpose((1,2,0)), mode='RGB')
         image = transform(image_orl)
         transform = transforms.Compose([transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
     image = transform(image)
 
-    print(label)
     model = SlotModel(args)
     # Map model to be loaded to specified single gpu.
     checkpoint = torch.load(f"{args.output_dir}", map_location=args.device)
@@ -119,7 +123,9 @@ def main(args):
     #     print(k)
     model.load_state_dict(checkpoint["model"])
 
-    test(args, model, device, image_orl, image, label, vis_id=args.vis_id)
+    pred = test(args, model, device, image_orl, image, label, vis_id=args.vis_id)
+
+    return (pred, label)
 
 
 # if __name__ == '__main__':
