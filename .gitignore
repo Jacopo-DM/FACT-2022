@@ -3,7 +3,7 @@
 saved_model*
 .idea/
 sloter/vis*/
-data/
+data_files/
 *.pyc
 .vscode/
 scripts/
