@@ -45,9 +45,9 @@ def test(args, model, device, img, image, label, vis_id):
     return pred[0]
 
 
-def main(args, datapoint):
+def create_vis(arguments, datapoint):
     parser = argparse.ArgumentParser('model training and evaluation script', parents=[get_args_parser()])
-    args = parser.parse_args(args)
+    args = parser.parse_args(arguments)
 
     args_dict = vars(args)
     args_for_evaluation = ['num_classes', 'lambda_value', 'power', 'slots_per_class']
@@ -129,4 +129,4 @@ def main(args, datapoint):
 
 
 # if __name__ == '__main__':
-#     main()
+#     create_vis()
