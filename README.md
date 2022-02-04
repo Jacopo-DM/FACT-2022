@@ -87,7 +87,7 @@ python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --world
 The CUB-200 experiments with different number of categories has been trained with
 similar commands by just adjusting the number of classes and/or reducing the number of workers for memory issues.
 
-###Generate results and visualization
+### Generate results and visualization
 
 The results (metrics) and visualizations are produced in the ```.ipynb``` file in this repository. 
 If you don't have a GPU, 
