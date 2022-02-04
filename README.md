@@ -95,6 +95,10 @@ python train.py --dataset MNIST --model resnet18 --batch_size 64 --epochs 10 \
 --num_classes 10 --use_slot true --use_pre true --loss_status 1 --slots_per_class 1 \
 --power 1 --to_k_layer 1 --lambda_value 1. --vis false --channel 512 --aug false
 ```
+params_imgnet_n_100_lambda1 = ['--dataset', 'ImageNet', '--model', 'resnest26d', '--batch_size','70', '--epochs','20', '--num_classes','100',
+'--use_slot','true', '--use_pre', 'false', '--loss_status','1', '--slots_per_class','1', '--lambda_value','1',
+'--vis','true', '--power', '2', '--to_k_layer', '3', '--channel', '2048', '--freeze_layers','0', '--dataset_dir','data/imagenet/', '--output_dir','trained_model_files/ImageNet_use_slot_checkpoint_classes100_lambda1.pth']
+
 
 ##### Negative Scouter for MNIST dataset
 

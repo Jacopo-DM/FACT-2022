@@ -147,10 +147,11 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
 
             insertion = CausalMetric(model, 'ins', 260*8, substrate_fn=blur)
             deletion = CausalMetric(model, 'del', 260*8, substrate_fn=torch.zeros_like)
-            h = insertion.evaluate(inputs.squeeze(), heatmap_right,inputs.shape[0])
+            h = insertion.evaluate(ground_truth, inputs.squeeze(), heatmap_right,inputs.shape[0])
             scores['ins'].append(auc(h.mean(1)))
-            h = deletion.evaluate(inputs.squeeze(), heatmap_right,inputs.shape[0])
+            h = deletion.evaluate(ground_truth,inputs.squeeze(), heatmap_right,inputs.shape[0])
             scores['del'].append(auc(h.mean(1)))
+            print(scores)
         else:
             logits, loss_list,_ = model(inputs, labels)
         

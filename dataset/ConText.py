@@ -80,10 +80,11 @@ class ConText(Dataset):
             raise ("not exist image:" + self.all_item[item_id][0])
         image_path = self.all_item[item_id][0]
         image = Image.open(image_path).convert('RGB')
+        width, height = image.size
         if image.mode == 'L':
             image = image.convert('RGB')
         if self.transform:
             image = self.transform(image)
         label = self.all_item[item_id][1]
         label = torch.from_numpy(np.array(label))
-        return {"image": image, "label": label, "names": image_path}
+        return {"image": image, "label": label, "names": image_path, "width": width, "height": height}

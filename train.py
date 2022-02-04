@@ -61,6 +61,8 @@ def get_args_parser():
     # data/machine set
     parser.add_argument('--dataset_dir', default='../PAN/bird_200/CUB_200_2011/CUB_200_2011/',
                         help='path for save data')
+    parser.add_argument('--annotations_dir', default='-',
+                        help='path where to find the annotations for bounding boxes')
     parser.add_argument('--output_dir', default='saved_model/',
                         help='path where to save, empty for no saving')
     parser.add_argument('--pre_dir', default='pre_model/',
