@@ -5,7 +5,7 @@
 
 
 ### Original codebase from https://github.com/wbw520/scouter
-#### Files changed in codebase 
+#### Python files changed in codebase 
 ```
 engine.py (significantly)
 train.py
@@ -14,13 +14,13 @@ dataset\ConText.py              (to retrieve the height and width of Imagenet im
 sloter\slot_model.py            (to get the attention map)
 sloter\utils\slot_attention.py  (to get the attention map)
 ```
-#### New files
+#### New python files
 ```
 get_results.py
-restruct_imgnet.py   (to restructure the ILSVRC imagenet dataset)
+restruct_imgnet.py   (to restructure the ILSVRC ImageNet dataset)
 ```
 
-#### Imported files from other papers (https://arxiv.org/abs/1806.07421, https://arxiv.org/abs/1901.09392)
+#### Imported python files from other papers (https://arxiv.org/abs/1806.07421, https://arxiv.org/abs/1901.09392)
 ```
 IAUC_DAUC_eval.py       (to get the IAUC and DAUC scores)
 IAUC_DAUC_eval_utils.py
@@ -32,7 +32,7 @@ infid_sen_utils.py      (to get sensitivity)
 
 
 ## Training
-
+NOTE: Training a model can take up to several hours.
 ### Imagenet
 
 For training ImageNet for 100 categories, a high-RAM GPU is needed. We used Google Cloud
