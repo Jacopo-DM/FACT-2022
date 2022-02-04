@@ -102,6 +102,7 @@ class SlotModel(nn.Module):
 
     def forward(self, x, target=None):
         x = self.backbone(x)
+        expl = 0
         if self.use_slot:
             x = self.conv1x1(x.view(x.size(0), self.channel, self.feature_size, self.feature_size))
 
@@ -119,9 +120,9 @@ class SlotModel(nn.Module):
         if target is not None:
             if self.use_slot:
                 loss = F.nll_loss(output, target) + self.lambda_value * attn_loss
-                return [output, [loss, F.nll_loss(output, target), attn_loss],expl]
+                return [output, [loss, F.nll_loss(output, target), attn_loss], expl]
             else:
                 loss = F.nll_loss(output, target)
-                return [output, [loss]]
+                return [output, [loss], expl]
 
         return output
