@@ -37,7 +37,7 @@ You can install the packages needed for this project by running:
 pip install -r requirements.txt
 ```
 
-This project uses 2 datasets, ImageNet and CUB-200. In the ```.ipynb``` file there are instructions on how to download them.
+This project uses 2 datasets, ImageNet and CUB-200. In the ```results.ipynb``` file there are instructions on how to download them.
 ## Training
 NOTE: Training a model can take up to several hours.
 ### Imagenet
@@ -119,7 +119,7 @@ similar commands by just adjusting the number of classes and/or reducing the num
 
 ### Generate results and visualization
 
-The results (metrics) and visualizations are produced in the ```.ipynb``` file in this repository. 
+The results (metrics) and visualizations are produced in the ```results.ipynb``` file in this repository. 
 If you don't have a GPU, 
 we strongly recommend to run this notebook on Google Colab (Pro version even better),
 since a lot of computational power is needed for calculating the area size, precision, IAUC, DAUC and sensitivity metrics.
