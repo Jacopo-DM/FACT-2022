@@ -30,7 +30,11 @@ infid_sen_utils.py      (to get sensitivity)
 
 #### If there's any questions about visualization or metrics, feel free to e-mail bartvanvulpen@icloud.com
 
-
+## Requirements
+You can install the packages needed for this project by running:
+```bash
+pip install -r requirements.txt
+```
 ## Training
 NOTE: Training a model can take up to several hours.
 ### Imagenet
