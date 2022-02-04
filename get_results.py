@@ -49,5 +49,5 @@ def calculate_metrics(arguments):
             args_dict[arg] = args_type[arg_id](args_dict[arg])
 
     if target_arg is None:
-        results_dic=main(args)
+        results_dic=main(args)    
     return results_dic

@@ -4,6 +4,22 @@
 # SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 
 
 
+# Files changed in codebase
+-engine.py (significantly)
+-train.py
+-test.py
+-dataset\ConText (to retrieve the height and width of Imagenet images)
+-sloter\slot_model.py (to get the attention map)
+-sloter\utils\slot_attention.py (to get the attention map)
+
+#new files
+get_results.py
+
+#imported files from other papers
+IAUC_DAUC_eval.py (to get the IAUC and DAUC scores)
+IAUC_DAUC_eval_utils.py
+infid_sen_utils.py (to get sensitivity)
+
 
 ## Training
 
@@ -25,7 +41,7 @@ python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 2
 ```bash
 python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 20 \
 --num_classes 100 --use_slot true --use_pre false --loss_status 1 --slots_per_class 1 --output_dir lambda_3/ \
---power 2 --num_workers 4 --to_k_layer 3 --lambda_value 3 --vis false --channel 2048 --freeze_layers 0 \
+--power 2 --num_workers 4 --to_k_layer 3 --lambda_value 10 --vis false --channel 2048 --freeze_layers 0 \
 --dataset_dir data/imagenet/ILSVRC/Data/CLS-LOC/
 ```
 
@@ -34,7 +50,7 @@ python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 2
 ```bash
 python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 20 \
 --num_classes 10 --use_slot true --use_pre false --loss_status -1 --slots_per_class 1 \
---power 2 --to_k_layer 3 --lambda_value 1 --vis false --channel 2048 --freeze_layers 0 \
+--power 2 --to_k_layer 3 --lambda_value 10 --vis false --channel 2048 --freeze_layers 0 \
 --dataset_dir ../data/imagenet/ILSVRC/Data/CLS-LOC/
 ```
 
