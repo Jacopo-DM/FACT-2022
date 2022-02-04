@@ -88,6 +88,7 @@ The CUB-200 experiments with different number of categories has been trained wit
 similar commands by just adjusting the number of classes and/or reducing the number of workers for memory issues.
 
 ###Generate results and visualization
+
 The results (metrics) and visualizations are produced in the ```.ipynb``` file in this repository. 
 If you don't have a GPU, 
 we strongly recommend to run this notebook on Google Colab (Pro version even better),
