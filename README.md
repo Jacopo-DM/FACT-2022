@@ -20,7 +20,7 @@ get_results.py
 restruct_imgnet.py   (to restructure the ILSVRC imagenet dataset)
 ```
 
-#### Imported files from other papers
+#### Imported files from other papers (https://arxiv.org/abs/1806.07421, https://arxiv.org/abs/1901.09392)
 ```
 IAUC_DAUC_eval.py       (to get the IAUC and DAUC scores)
 IAUC_DAUC_eval_utils.py
