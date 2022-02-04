@@ -65,12 +65,10 @@ class SlotAttention(nn.Module):
 
             slots = slots.reshape(b, -1, d)
 
-            
             slots_vis = attn.clone()
         if self.vis:
             if self.slots_per_class > 1:
                 new_slots_vis = torch.zeros((slots_vis.size(0), self.num_classes, slots_vis.size(-1)))
-                print('TEST', new_slots_vis)
                 for slot_class in range(self.num_classes):
                     new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
                 slots_vis = new_slots_vis.to(updates.device)
@@ -80,8 +78,7 @@ class SlotAttention(nn.Module):
             for id, image in enumerate(slots_vis):
                 image = Image.fromarray(image, mode='L')
                 image.save(f'sloter/vis/slot_{id:d}.png')
-            print(self.loss_status*torch.sum(attn.clone(), dim=2, keepdim=False))
-            print(self.loss_status*torch.sum(updates.clone(), dim=2, keepdim=False))
+    
         if self.slots_per_class > 1:
             new_updates = torch.zeros((updates.size(0), self.num_classes, updates.size(-1)))
             for slot_class in range(self.num_classes):
@@ -89,6 +86,7 @@ class SlotAttention(nn.Module):
             updates = new_updates.to(updates.device)
 
             #to get the attention right
+            slots_vis = torch.tensor(slots_vis)
             new_slots_vis = torch.zeros((slots_vis.size(0), self.num_classes, slots_vis.size(-1)))
             for slot_class in range(self.num_classes):
                 new_slots_vis[:, slot_class] = torch.sum(torch.cat([slots_vis[:, self.slots_per_class*slot_class: self.slots_per_class*(slot_class+1)]], dim=1), dim=1, keepdim=False)
