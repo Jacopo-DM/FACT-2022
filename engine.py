@@ -62,19 +62,22 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
         inputs = sample_batch["image"].to(device, dtype=torch.float32)
         names= sample_batch["names"]
         labels = sample_batch["label"].to(device, dtype=torch.int64)
+
+
+        #getting the original widths and heights per image to adjust bounding boxes
         widths = sample_batch["width"]
         heights =sample_batch["height"]
 
-
-
-
         if mode == "train":
             optimizer.zero_grad()
+
+        #Calculate all results
         if testing:
             borders=[]
             batch_xmax=0
             batch_ymax=0
-
+            
+            #Extract the orignial sizes from the xml files of the original images
             for name in names:
                 replaced=name.replace('_', '.')
                 x = replaced.split(".")
@@ -99,9 +102,17 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
                     brd.append([int(xmin[i].string),int(xmax[i].string),int(ymin[i].string),int(ymax[i].string)])
                 borders.append(brd)
             borders=np.array(borders, dtype="object")
+
+            #calculate explanations and predictions
             logits, loss_list, expl = model(inputs, labels)
+            
+            #ground labels
             ground_truth= torch.argmax(logits, dim=1)
+
+            #LSC labels
             LSC=torch.argmin(logits, dim=1)
+
+            #get the right explanations from the right labels
             right_label=ground_truth.view(-1, 1, 1).expand(inputs.shape[0], 1, 81)
             wrong_label=LSC.view(-1, 1, 1).expand(inputs.shape[0], 1, 81)
 
@@ -112,11 +123,12 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
             batch_wrong_expl=torch.gather(expl, 1, wrong_label)
             batch_wrong_expl=batch_wrong_expl.squeeze()
             batch_wrong_expl=batch_wrong_expl.reshape(expl.size(0),9,9).cpu().detach().numpy()
+
             heatmap_right=np.zeros((inputs.shape[0],260,260))
             heatmap_wrong=np.zeros((inputs.shape[0],260,260))
             batch_prec=0
             batch_area=0
-
+            #resize the explanations and calculate precision based on positive or negative explanation
             for i in range(len(batch_right_expl)):
                 slot_im_wrong= PIL.Image.fromarray(batch_wrong_expl[i])
                 wrong_size_slot=np.array(slot_im_wrong.resize((260,260), resample=PIL.Image.BILINEAR))
@@ -131,6 +143,7 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
                 slot_image_size = heatmap_right[i].shape
                 batch_area += float(heatmap_right[i].sum()) / float(slot_image_size[0]*slot_image_size[1])
             
+            #calculate batch sensitivity based on positive or negative explanation
             if loss_status==-1:
                 norm = np.linalg.norm(heatmap_wrong)
                 sensit +=get_exp_sens_neg(inputs, model,heatmap_wrong, labels,0.1,50,norm)
@@ -140,6 +153,8 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
 
             prec+=batch_prec/inputs.shape[0]
             area_size+=batch_area/inputs.shape[0]
+
+            #compute IAUC and DAUC
             klen = 11
             ksig = 5    
             kern = gkern(klen, ksig).to(device)
@@ -151,14 +166,12 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
             scores['ins'].append(auc(h.mean(1)))
             h = deletion.evaluate(ground_truth,inputs.squeeze(), heatmap_right,inputs.shape[0])
             scores['del'].append(auc(h.mean(1)))
-            print(scores)
         else:
             logits, loss_list,_ = model(inputs, labels)
         
         loss = loss_list[0]
         if mode == "train":
             loss.backward()
-            # clip_gradient(optimizer, 1.1)
             optimizer.step()
 
         a = loss.item()
@@ -167,6 +180,7 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
             running_att_loss += loss_list[2].item()
             running_log_loss += loss_list[1].item()
         running_corrects += cal.evaluateTop1(logits, labels)
+
         # if i_batch % 10 == 0:
         #     print("epoch: {} {}/{} Loss: {:.4f}".format(epoch, i_batch, L-1, a))
     total_prec = round(prec/L,3)
@@ -178,16 +192,16 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
     epoch_acc = round(running_corrects/L, 3)
     epoch_IAUC = np.mean(scores['ins'])
     epoch_DAUC = np.mean(scores['del'])
-    print('IAUC: ', epoch_IAUC)
-    print('DAUC: ',epoch_DAUC)
-    print('sensitivity: ', sensit)
-    print('area_size: ',total_area)
-    print('precision: ',total_prec)
     record[mode]["loss"].append(epoch_loss)
     record[mode]["acc"].append(epoch_acc)
     record[mode]["log_loss"].append(epoch_loss_log)
     record[mode]["att_loss"].append(epoch_loss_att)
     if testing:
+        print('IAUC: ', epoch_IAUC)
+        print('DAUC: ',epoch_DAUC)
+        print('sensitivity: ', sensit)
+        print('area_size: ',total_area)
+        print('precision: ',total_prec)
         return {"IAUC": epoch_IAUC, "DAUC": epoch_DAUC, "acc":epoch_acc, "precision":total_prec,"area_size":total_area,"sensitivity": sensit}
 
 
