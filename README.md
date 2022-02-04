@@ -61,7 +61,7 @@ python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 2
 python train.py --dataset ImageNet --model resnest26d --batch_size 70 --epochs 20 \
 --num_classes 10 --use_slot true --use_pre false --loss_status -1 --slots_per_class 1 \
 --power 2 --to_k_layer 3 --lambda_value 10 --vis false --channel 2048 --freeze_layers 0 \
---dataset_dir ../data/imagenet/ILSVRC/Data/CLS-LOC/
+--dataset_dir data/imagenet/ILSVRC/Data/CLS-LOC/
 ```
 
 ###### You can enable distributed training using the following arguments in your command:
