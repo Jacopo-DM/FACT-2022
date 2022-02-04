@@ -14,6 +14,7 @@ dataset\ConText.py              (to retrieve the height and width of Imagenet im
 sloter\slot_model.py            (to get the attention map)
 sloter\utils\slot_attention.py  (to get the attention map)
 ```
+
 #### New python files
 ```
 get_results.py
@@ -35,6 +36,8 @@ You can install the packages needed for this project by running:
 ```bash
 pip install -r requirements.txt
 ```
+
+This project uses 2 datasets, ImageNet and CUB-200. In the ```.ipynb``` file there are instructions on how to download them.
 ## Training
 NOTE: Training a model can take up to several hours.
 ### Imagenet
