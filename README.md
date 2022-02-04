@@ -76,10 +76,10 @@ python -m torch.distributed.launch --nproc_per_node=4 --use_env train.py --world
 
 ##### Pre-training FC ResNest50 backbone (50 categories)
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --world_size 1 
+python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --world_size 1 \
 --dataset CUB200 --model resnest50d --num_workers 0 --batch_size 16 --epochs 150 \
 --num_classes 50 --use_slot false --vis false --channel 2048 \
---dataset_dir data/CUB_200_2011
+--dataset_dir data/CUB200/CUB_200_2011
 ```
 
 ##### Pre-training FC ResNest26 backbone (100 categories)
@@ -97,7 +97,7 @@ python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --world
 --model resnest50d --batch_size 16 --epochs 150 \
 --num_classes 50 --num_workers 2 --use_slot true --use_pre true --loss_status 1 --slots_per_class 5 \
 --power 2 --to_k_layer 3 --lambda_value 10 --vis false --channel 2048 --freeze_layers 2 \
---dataset_dir data/CUB_200_2011/
+--dataset_dir data/CUB200/CUB_200_2011/
 ```
 
 ##### Negative Scouter on CUB-200 (50 categories)
@@ -107,7 +107,7 @@ python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py --world
 --num_workers 2 --model resnest50d --batch_size 16 --epochs 150 \
 --num_classes 50 --use_slot true --use_pre true --loss_status -1 --slots_per_class 3 \
 --power 2 --to_k_layer 3 --lambda_value 1. --vis false --channel 2048 --freeze_layers 2 \
---dataset_dir data/CUB_200_2011
+--dataset_dir data/CUB200/CUB_200_2011
 ```
 
 The CUB-200 experiments with different number of categories has been trained with

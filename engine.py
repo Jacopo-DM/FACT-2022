@@ -63,16 +63,14 @@ def calculation(model, mode, data_loader, device, record, epoch, optimizer=None,
         names= sample_batch["names"]
         labels = sample_batch["label"].to(device, dtype=torch.int64)
 
-
-        #getting the original widths and heights per image to adjust bounding boxes
-        widths = sample_batch["width"]
-        heights =sample_batch["height"]
-
         if mode == "train":
             optimizer.zero_grad()
 
         #Calculate all results
         if testing:
+            # getting the original widths and heights per image to adjust bounding boxes
+            widths = sample_batch["width"]
+            heights = sample_batch["height"]
             borders=[]
             batch_xmax=0
             batch_ymax=0
