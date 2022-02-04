@@ -1,29 +1,34 @@
 
 
 # FACT 2022
-# SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 
+## SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 
 
 
-# Original codebase from https://github.com/wbw520/scouter
-# Files changed in codebase 
--engine.py (significantly)
--train.py
--test.py
--dataset\ConText (to retrieve the height and width of Imagenet images)
--sloter\slot_model.py (to get the attention map)
--sloter\utils\slot_attention.py (to get the attention map)
-
-#new files
+### Original codebase from https://github.com/wbw520/scouter
+#### Files changed in codebase 
+```
+engine.py (significantly)
+train.py
+test.py
+dataset\ConText.py              (to retrieve the height and width of Imagenet images)
+sloter\slot_model.py            (to get the attention map)
+sloter\utils\slot_attention.py  (to get the attention map)
+```
+#### New files
+```
 get_results.py
+restruct_imgnet.py   (to restructure the ILSVRC imagenet dataset)
+```
 
-#imported files from other papers
-IAUC_DAUC_eval.py (to get the IAUC and DAUC scores)
+#### Imported files from other papers
+```
+IAUC_DAUC_eval.py       (to get the IAUC and DAUC scores)
 IAUC_DAUC_eval_utils.py
-infid_sen_utils.py (to get sensitivity)
+infid_sen_utils.py      (to get sensitivity)
+```
 
 
-
-# If there's any questions about visualization or metrics, feel free to e-mail bartvanvulpen@icloud.com
+#### If there's any questions about visualization or metrics, feel free to e-mail bartvanvulpen@icloud.com
 
 
 ## Training
