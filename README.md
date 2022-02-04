@@ -4,7 +4,7 @@
 ## SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 
 
 
-### Original codebase from https://github.com/wbw520/scouter
+#### Original codebase from https://github.com/wbw520/scouter
 #### Python files changed in codebase 
 ```
 engine.py (significantly)
