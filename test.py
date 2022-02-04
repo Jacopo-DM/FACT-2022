@@ -42,7 +42,7 @@ def test(args, model, device, img, image, label, vis_id):
         attention_ratio = float(slot_image.sum()) / float(slot_image_size[0]*slot_image_size[1]*255)
         print(f"attention_ratio: {attention_ratio}")
 
-    return pred[0]
+    return pred[0].item()
 
 
 def create_vis(arguments, datapoint):
